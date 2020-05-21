@@ -7,7 +7,7 @@ info:
     name: DIAGROUP API TEAM
     email: es.isit.integracion@diagroup.com
 servers:
-  - url: 'https://dia-com-api-dev-developer.apigee.io/v1/stock/store/'
+  - url: 'https://dia-com-api-dev-developer.apigee.io/v1/stock-store/'
     description: Dev
   - url: 'https://dia-com-api-test-developer.apigee.io'
     description: test
