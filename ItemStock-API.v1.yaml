@@ -7,7 +7,7 @@ info:
     name: DIAGROUP API TEAM
     email: es.isit.integracion@diagroup.com
 servers:
-  - url: 'https://dia-com-api-dev-developer.apigee.io/v1/stock-store/'
+  - url: 'https://dia-com-api-dev-developer.apigee.io/v1/item-stock/'
     description: Dev
   - url: 'https://dia-com-api-test-developer.apigee.io'
     description: test
@@ -15,7 +15,7 @@ tags:
   - name: stock
     description: Everything Operation related to manage stock of items in stores
 paths:
-  '/item-stock/stores/{storeCode}/items/{itemCode}':
+  '/stores/{storeCode}/items/{itemCode}':
     get:
       tags:
         - stock
@@ -46,7 +46,7 @@ paths:
           description: Forbidden
         '500':
           description: Internal Server Error
-  '/item-stock/stores/{storeCode}/items':
+  '/stores/{storeCode}/items':
     get:
       tags:
         - stock
@@ -91,7 +91,7 @@ paths:
           description: Forbidden
         '500':
           description: Internal Server Error
-  '/item-stock/stores/{storeCode}/items/zero':
+  '/stores/{storeCode}/items/zero':
     get:
       tags:
         - stock
@@ -122,7 +122,7 @@ paths:
           description: Forbidden
         '500':
           description: Internal Server Error
-  '/item-stock/stores/{storeCode}/items/negative':
+  '/stores/{storeCode}/items/negative':
     get:
       tags:
         - stock
