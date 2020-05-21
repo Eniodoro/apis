@@ -1,0 +1,244 @@
+openapi: 3.0.2
+info:
+  title: item-stock
+  version: 1.0.0
+  description: Everything Operation related to manage stock of items in stores
+  contact:
+    name: DIAGROUP API TEAM
+    email: es.isit.integracion@diagroup.com
+servers:
+  - url: 'https://dia-com-api-dev-developer.apigee.io'
+    description: Dev
+  - url: 'https://dia-com-api-test-developer.apigee.io'
+    description: test
+tags:
+  - name: stock
+    description: Everything Operation related to manage stock of items in stores
+paths:
+  '/item-stock/stores/{storeCode}/items/{itemCode}':
+    get:
+      tags:
+        - stock
+      summary: Query of current stock of an item on a store
+      operationId: get-item-stock
+      description: get the current stock of an item
+      x-diagroup-granted-roles: 'CASHIER,STORE_MANAGER,DEPARTMENT_MANAGER,INSPECTOR,STORE_HEAD,FRANCHISEE,MANAGER,EXTERNAL,STOCKTAKING_MANAGER,CASHIER_FRANCHISEE,STORE_MANAGER_FRANCHISEE,DEPARTMENT_MANAGER_FRANCHISEE,STORE_HEAD_FRANCHISEE,PRINCIPAL_CASHIER,DIA_SYSTEMS,THIRD_PARTY'
+      parameters:
+        - $ref: '#/components/parameters/Path-StoreCode'
+        - $ref: '#/components/parameters/Path-ItemCode'
+        - $ref: '#/components/parameters/Header-RequestID'
+        - $ref: '#/components/parameters/Header-DiagroupUserId'
+        - $ref: '#/components/parameters/Header-ApplicationId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemStock'          
+        '204':
+          description: There is no any stock info for this item and store
+        '404':
+          description: Not found
+        '401':
+          description: Not authorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal Server Error
+  '/item-stock/stores/{storeCode}/items':
+    get:
+      tags:
+        - stock
+      summary: 'Query for current-stock of a lists of items (max number 32) on a store'
+      operationId: 'get-current-item-stocks'
+      description: 'get all the current stock of a list of items. If not passed the filtered list as query param, by default get the last 32 items'
+      x-diagroup-granted-roles: 'CASHIER,STORE_MANAGER,DEPARTMENT_MANAGER,INSPECTOR,STORE_HEAD,FRANCHISEE,MANAGER,EXTERNAL,STOCKTAKING_MANAGER,CASHIER_FRANCHISEE,STORE_MANAGER_FRANCHISEE,DEPARTMENT_MANAGER_FRANCHISEE,STORE_HEAD_FRANCHISEE,PRINCIPAL_CASHIER,DIA_SYSTEMS,THIRD_PARTY'
+      parameters:
+        - $ref: '#/components/parameters/Path-StoreCode'
+        - $ref: '#/components/parameters/Query-ListOfItemsFilter'
+        - $ref: '#/components/parameters/Header-RequestID'
+        - $ref: '#/components/parameters/Header-DiagroupUserId'
+        - $ref: '#/components/parameters/Header-ApplicationId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                minItems: 1
+                maxItems: 32
+                items:
+                  $ref: '#/components/schemas/CurrentItemStock'
+        '204':
+          description: There is no any stock for any item found
+        '206':
+          description: OK Partial Content Found
+          content:
+            application/json:
+              schema:
+                type: array
+                minItems: 1
+                maxItems: 31
+                items:
+                  $ref: '#/components/schemas/CurrentItemStock'
+        '404':
+          description: Not found
+        '401':
+          description: Not authorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal Server Error
+  '/item-stock/stores/{storeCode}/items/zero':
+    get:
+      tags:
+        - stock
+      summary: 'Query for current items with zero stock on a store'
+      operationId: 'get-current-zero-stock-items'
+      description: 'get all the current zero stock of a store'
+      x-diagroup-granted-roles: 'CASHIER,STORE_MANAGER,DEPARTMENT_MANAGER,INSPECTOR,STORE_HEAD,FRANCHISEE,MANAGER,EXTERNAL,STOCKTAKING_MANAGER,CASHIER_FRANCHISEE,STORE_MANAGER_FRANCHISEE,DEPARTMENT_MANAGER_FRANCHISEE,STORE_HEAD_FRANCHISEE,PRINCIPAL_CASHIER,DIA_SYSTEMS,THIRD_PARTY'
+      parameters:
+        - $ref: '#/components/parameters/Path-StoreCode'
+        - $ref: '#/components/parameters/Header-RequestID'
+        - $ref: '#/components/parameters/Header-DiagroupUserId'
+        - $ref: '#/components/parameters/Header-ApplicationId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                minItems: 1
+                items:
+                  $ref: '#/components/schemas/ItemCode'
+        '204':
+          description: There is no any stock-zero items in the store
+        '401':
+          description: Not authorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal Server Error
+  '/item-stock/stores/{storeCode}/items/negative':
+    get:
+      tags:
+        - stock
+      summary: 'Query for current items with negative stock on a store'
+      operationId: 'get-current-negative-stock-items'
+      description: 'get all the current zero stock of a store'
+      x-diagroup-granted-roles: 'CASHIER,STORE_MANAGER,DEPARTMENT_MANAGER,INSPECTOR,STORE_HEAD,FRANCHISEE,MANAGER,EXTERNAL,STOCKTAKING_MANAGER,CASHIER_FRANCHISEE,STORE_MANAGER_FRANCHISEE,DEPARTMENT_MANAGER_FRANCHISEE,STORE_HEAD_FRANCHISEE,PRINCIPAL_CASHIER,DIA_SYSTEMS,THIRD_PARTY'
+      parameters:
+        - $ref: '#/components/parameters/Path-StoreCode'
+        - $ref: '#/components/parameters/Header-RequestID'
+        - $ref: '#/components/parameters/Header-DiagroupUserId'
+        - $ref: '#/components/parameters/Header-ApplicationId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                minItems: 1
+                items:
+                  $ref: '#/components/schemas/ItemCode'
+        '204':
+          description: There is no any stock-negative items in the store
+        '404':
+          description: Not found
+        '401':
+          description: Not authorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal Server Error
+
+components:
+  parameters:
+    Path-StoreCode:
+      in: path
+      name: storeCode
+      description: store code to be ask for
+      schema:
+        $ref: '#/components/schemas/StoreCode'
+      required: true
+    Path-ItemCode:
+      in: path
+      name: itemCode
+      description: item code to be ask for
+      schema:
+        $ref: '#/components/schemas/ItemCode'
+      required: true
+    Header-RequestID:
+      in: header
+      name: X-Request-ID
+      description: Request Id of the request
+      schema:
+        $ref: '#/components/schemas/x-diagroup-uuid'
+      required: true
+    Header-DiagroupUserId:
+      in: header
+      name: X-Diagroup-User-ID
+      description: Diagroup User Id
+      schema:
+        $ref: '#/components/schemas/x-diagroup-user'
+      required: true
+    Header-ApplicationId:
+      in: header
+      name: X-Diagroup-Application-ID
+      description: description Id of the source Application
+      schema:
+        $ref: '#/components/schemas/x-diagroup-application'
+      required: true
+    Query-ListOfItemsFilter:
+      in: query
+      name: itemCode
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/ItemCode'
+        minItems: 1
+        maxItems: 32
+      explode: false
+      style: form
+  schemas:
+    CurrentItemStock:
+      type: object
+      required:
+        - itemCode
+        - itemStock
+      properties:
+        itemCode:
+          $ref: '#/components/schemas/ItemCode'
+        itemStock:
+          $ref: '#/components/schemas/ItemStock'
+    StoreCode:
+      type: number
+      format: integer
+      example: 21      
+      description: Unique Identifier of the store
+      x-faker: "random.number"          
+    ItemCode:
+      type: number
+      format: integer
+      example: 803
+      description: Unique Identifier of an item
+      x-faker: "random.number"      
+    ItemStock:
+      type: number
+      format: integer
+      description: normalized stock of an item
+      example: 15            
+      x-faker: "random.number"             
+    x-diagroup-uuid:
+      type: string
+      format: uuid
+    x-diagroup-application:
+      type: string
+      example: "MyStore"
+    x-diagroup-user:
+      type: string
+      example: "AAA666ES"
