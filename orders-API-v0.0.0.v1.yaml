@@ -1,0 +1,395 @@
+openapi: 3.0.2
+info:
+  title: orders
+  version: 1.0.0
+  description: Everything Operation related to manage order of stores
+  contact:
+    name: 'DíA % Integración'
+    email: es.isit.integracion@diagroup.com
+    url: 'http://www.diacorporate.com'
+servers:
+  - url: 'https://dia-com-api-test-developer.apigee.io'
+    description: test
+tags:
+  - name: order
+    description: Everything Operation related to manage order of items in stores
+paths:
+  '/orders/stores/{storeCode}/proposals':
+    get:
+      tags:
+        - order
+      summary: Query for current proposals for a store
+      operationId: get-orders-store-proposals
+      description: get proposals for a store
+      x-diagroup-granted-roles: 'CASHIER,STORE_MANAGER,DEPARTMENT_MANAGER,INSPECTOR,STORE_HEAD,FRANCHISEE,MANAGER,EXTERNAL,STOCKTAKING_MANAGER,CASHIER_FRANCHISEE,STORE_MANAGER_FRANCHISEE,DEPARTMENT_MANAGER_FRANCHISEE,STORE_HEAD_FRANCHISEE,PRINCIPAL_CASHIER,DIA_SYSTEMS,THIRD_PARTY'
+      parameters:
+        - $ref: '#/components/parameters/Path-StoreCode'
+        - $ref: '#/components/parameters/Header-RequestID'
+        - $ref: '#/components/parameters/Header-DiagroupUserId'
+        - $ref: '#/components/parameters/Header-ApplicationId'
+        - $ref: '#/components/parameters/Header-ClientId'
+        - $ref: '#/components/parameters/Query-PaginationOffset'
+        - $ref: '#/components/parameters/Query-PaginationLimit'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderProposalCode'
+                minItems: 1
+                maxItems: 100
+        '204':
+          description: There is no any order info for this store
+        '400':
+          description: Bad Request
+        '401':
+          description: Not authorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+        '408':
+          description: Timeout
+        '500':
+          description: Internal Server Error
+  '/orders/stores/{storeCode}/proposals/{orderProposalCode}':
+    get:
+      tags:
+        - order
+      summary: Query for current proposal for a store
+      operationId: get-orders-store-proposal
+      description: get details of a requested proposal for a store
+      x-diagroup-granted-roles: 'CASHIER,STORE_MANAGER,DEPARTMENT_MANAGER,INSPECTOR,STORE_HEAD,FRANCHISEE,MANAGER,EXTERNAL,STOCKTAKING_MANAGER,CASHIER_FRANCHISEE,STORE_MANAGER_FRANCHISEE,DEPARTMENT_MANAGER_FRANCHISEE,STORE_HEAD_FRANCHISEE,PRINCIPAL_CASHIER,DIA_SYSTEMS,THIRD_PARTY'
+      parameters:
+        - $ref: '#/components/parameters/Path-OrderProposalCode'
+        - $ref: '#/components/parameters/Path-StoreCode'
+        - $ref: '#/components/parameters/Header-RequestID'
+        - $ref: '#/components/parameters/Header-ClientId'
+        - $ref: '#/components/parameters/Header-DiagroupUserId'
+        - $ref: '#/components/parameters/Header-ApplicationId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderLineProposal'
+        '204':
+          description: There is no any order info for this store
+        '400':
+          description: Bad Request
+        '401':
+          description: Not authorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+        '408':
+          description: Timeout
+        '500':
+          description: Internal Server Error
+  '/orders/stores/{storeCode}/proposals/{orderProposalCode}/items/{itemCode}':
+    post:
+      tags:
+        - order
+      summary: Adds the indicated quantity to an item
+      operationId: adds-orders-store-article-item
+      description: adds the quantity to an item
+      x-diagroup-granted-roles: 'CASHIER,STORE_MANAGER,DEPARTMENT_MANAGER,INSPECTOR,STORE_HEAD,FRANCHISEE,MANAGER,EXTERNAL,STOCKTAKING_MANAGER,CASHIER_FRANCHISEE,STORE_MANAGER_FRANCHISEE,DEPARTMENT_MANAGER_FRANCHISEE,STORE_HEAD_FRANCHISEE,PRINCIPAL_CASHIER,DIA_SYSTEMS,THIRD_PARTY'
+      parameters:
+        - $ref: '#/components/parameters/Path-StoreCode'
+        - $ref: '#/components/parameters/Path-OrderProposalCode'
+        - $ref: '#/components/parameters/Path-ItemCode'
+        - $ref: '#/components/parameters/Header-RequestID'
+        - $ref: '#/components/parameters/Header-ClientId'
+        - $ref: '#/components/parameters/Header-DiagroupUserId'
+        - $ref: '#/components/parameters/Header-ApplicationId'
+      responses:
+        '201':
+          description: Created
+        '204':
+          description: There is no any order info for this store
+        '401':
+          description: Not authorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+        '408':
+          description: Timeout
+        '500':
+          description: Internal Server Error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Quantity'
+    put:
+      tags:
+        - order
+      summary: Modifies the indicated quantity to an item
+      operationId: modifies-orders-store-article-item
+      description: modifies the quantity to an item
+      x-diagroup-granted-roles: 'CASHIER,STORE_MANAGER,DEPARTMENT_MANAGER,INSPECTOR,STORE_HEAD,FRANCHISEE,MANAGER,EXTERNAL,STOCKTAKING_MANAGER,CASHIER_FRANCHISEE,STORE_MANAGER_FRANCHISEE,DEPARTMENT_MANAGER_FRANCHISEE,STORE_HEAD_FRANCHISEE,PRINCIPAL_CASHIER,DIA_SYSTEMS,THIRD_PARTY'
+      parameters:
+        - $ref: '#/components/parameters/Path-StoreCode'
+        - $ref: '#/components/parameters/Path-OrderProposalCode'
+        - $ref: '#/components/parameters/Path-ItemCode'
+        - $ref: '#/components/parameters/Header-RequestID'
+        - $ref: '#/components/parameters/Header-ClientId'
+        - $ref: '#/components/parameters/Header-DiagroupUserId'
+        - $ref: '#/components/parameters/Header-ApplicationId'
+      responses:
+        '200':
+          description: OK
+        '204':
+          description: There is no any order info for this store
+        '401':
+          description: Not authorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+        '408':
+          description: Timeout
+        '500':
+          description: Internal Server Error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Quantity'
+  '/orders/stores/{storeCode}/salesForecast/{itemCode}':
+    get:
+      tags:
+        - order
+      summary: Item sales forecast information
+      operationId: get-forecast-sales-item
+      description: gets item sales forecast information
+      x-diagroup-granted-roles: 'CASHIER,STORE_MANAGER,DEPARTMENT_MANAGER,INSPECTOR,STORE_HEAD,FRANCHISEE,MANAGER,EXTERNAL,STOCKTAKING_MANAGER,CASHIER_FRANCHISEE,STORE_MANAGER_FRANCHISEE,DEPARTMENT_MANAGER_FRANCHISEE,STORE_HEAD_FRANCHISEE,PRINCIPAL_CASHIER,DIA_SYSTEMS,THIRD_PARTY'
+      parameters:
+        - $ref: '#/components/parameters/Path-StoreCode'
+        - $ref: '#/components/parameters/Path-ItemCode'
+        - $ref: '#/components/parameters/Header-RequestID'
+        - $ref: '#/components/parameters/Header-ClientId'
+        - $ref: '#/components/parameters/Header-DiagroupUserId'
+        - $ref: '#/components/parameters/Header-ApplicationId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SalesForecast'
+                minItems: 1
+                maxItems: 1
+        '204':
+          description: There is no sale forecast info for this item
+        '400':
+          description: Bad Request
+        '401':
+          description: Not authorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+        '408':
+          description: Timeout
+        '500':
+          description: Internal Server Error
+components:
+  parameters:
+    Path-StoreCode:
+      in: path
+      name: storeCode
+      description: store code to be ask for
+      schema:
+        $ref: '#/components/schemas/StoreCode'
+      required: true
+    Path-ItemCode:
+      in: path
+      name: itemCode
+      description: item code to be ask for
+      schema:
+        $ref: '#/components/schemas/ItemCode'
+      required: true
+    Path-OrderProposalCode:
+      in: path
+      name: orderProposalCode
+      description: proposal code to be ask for
+      schema:
+        $ref: '#/components/schemas/OrderProposalCode'
+      required: true
+    Query-Status:
+      in: query
+      name: status
+      description: status of a value
+      schema:
+        $ref: '#/components/schemas/Quantity'
+      required: true
+    Header-RequestID:
+      in: header
+      name: X-Request-ID
+      description: Request Id of the request
+      schema:
+        $ref: '#/components/schemas/x-diagroup-uuid'
+      required: true
+    Header-DiagroupUserId:
+      in: header
+      name: X-Diagroup-User-ID
+      description: Diagroup User Id
+      schema:
+        $ref: '#/components/schemas/x-diagroup-user'
+      required: true
+    Header-ApplicationId:
+      in: header
+      name: X-Diagroup-Application-ID
+      description: description Id of the source Application
+      schema:
+        $ref: '#/components/schemas/x-diagroup-application'
+      required: true
+    Header-ClientId:
+      in: header
+      name: client_id
+      description: description Id of the source Application
+      schema:
+        $ref: '#/components/schemas/x-diagroup-client_id'
+      required: true
+    Query-PaginationOffset:
+      in: query
+      name: offset
+      description: number of items to skip before starting to collect the result set
+      schema:
+        $ref: '#/components/schemas/offset'
+      required: false
+    Query-PaginationLimit:
+      in: query
+      name: limit
+      description: numbers of items to return
+      schema:
+        $ref: '#/components/schemas/limit'
+      required: false
+  schemas:
+    OrderLineProposal:
+      type: object
+      description: Order line Transmitted related of an Item
+      properties:
+        itemCode:
+          $ref: '#/components/schemas/ItemCode'
+        dateTime:
+          $ref: '#/components/schemas/DateTime'
+        date:
+          $ref: '#/components/schemas/Date'
+        format:
+          $ref: '#/components/schemas/FormatType'
+        quantity:
+          $ref: '#/components/schemas/Quantity'
+        undeliveredQuantity:
+          $ref: '#/components/schemas/UndeliveredOrderQuantity'
+        currentStock:
+          $ref: '#/components/schemas/CurrentStock'
+        itemCapacity:
+          $ref: '#/components/schemas/ItemCapacity'
+        isInPromotion:
+          $ref: '#/components/schemas/isInPromotion'
+        quantityForecast:
+          $ref: '#/components/schemas/QuantityForecast'
+    StoreCode:
+      type: number
+      format: integer
+      example: 21
+      description: Unique Identifier of the store
+      x-faker: random.number
+    ItemCode:
+      type: number
+      format: integer
+      example: 803
+      description: Unique Identifier of an item
+      x-faker: random.number
+    FormatType:
+      type: string
+      enum:
+        - UNIT
+        - WEIGHT
+      example: UNIT
+    OrderProposalCode:
+      type: string
+      format: uuid
+      example: e8e3db08-dc39-48ea-a3db-08dc3958eafb
+      description: Unique Identifier of an order related with a Store
+      x-faker: random.uuid
+    Quantity:
+      type: number
+      format: int32
+      description: Unit or Weight (grammes) to be sent
+      example: 50
+    SalesForecast:
+      description: List of forecast for the item in a date
+      type: array
+      items:
+        type: object
+        properties:
+          quantity:
+            type: number
+            format: float
+            description: Sales Forecast Quantity for this item
+            example: 35.2
+          date:
+            type: string
+            format: full-date
+            example: '2017-07-21'
+    DateTime:
+      type: string
+      format: date-time
+      example: '2017-07-21T17:32:28Z'
+    Date:
+      type: string
+      format: full-date
+      example: '2017-07-21'
+    UndeliveredOrderQuantity:
+      type: number
+      format: int32
+      description: Units/grammes (depends on FormatType value) pending to be sent
+    CurrentStock:
+      type: number
+      format: int32
+      description: Item current stock (Units/grammes depends on FormatType value)
+    ItemCapacity:
+      type: number
+      format: int32
+      description: Item capacity (Units/grammes depends on FormatType value)
+    isInPromotion:
+      format: boolean
+      description: Field that shows high item needs forecast
+      example: false
+    QuantityForecast:
+      type: number
+      format: float
+      description: Sales Forecast Quantity for this item
+    x-diagroup-uuid:
+      type: string
+      format: uuid
+      example: 123e4567-e89b-12d3-a456-426614174000
+    x-diagroup-application:
+      type: string
+      example: MyStore
+    x-diagroup-user:
+      type: string
+      example: AAA666ES
+    x-diagroup-client_id:
+      type: string
+      example: AAA666ES
+    offset:
+      type: integer
+      description: The numbers of items to return
+      example: 0
+    limit:
+      type: integer
+      description: The number of items to skip before starting to collect the result set
+      example: 25
+  securitySchemes: {}

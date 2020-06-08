@@ -1,0 +1,455 @@
+openapi: 3.0.1
+info:
+  title: short-codes
+  description: API for Proyect Short Codes
+  contact:
+    email: alfonso.fernandez@diagroup.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  version: 1.0.3
+servers:
+  - url: 'https://product-short-codes-api-develop.dev.store.dgrp.io'
+    description: kyma-dev
+tags:
+  - name: short-codes
+    description: Everything about your short-codes
+paths:
+  /short-codes:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  required:
+                    - itemShortCode
+                    - itemCode
+                  type: object
+                  properties:
+                    itemShortCode:
+                      format: int32
+                      maximum: 99
+                      minimum: 1
+                      type: integer
+                      nullable: false
+                      example: 10
+                    itemCode:
+                      format: int32
+                      maximum: 999999
+                      minimum: 1
+                      type: integer
+                      nullable: false
+                      example: 18982
+                    storeCode:
+                      format: int32
+                      maximum: 99999
+                      minimum: 1
+                      type: integer
+                      nullable: false
+                      example: 5100
+                  x-examples:
+                    one-item:
+                      - itemShortCode: 10
+                        itemCode: 18982
+                        storeCode: 5100
+              examples:
+                example-OK:
+                  value:
+                    - itemShortCode: 10
+                      itemCode: 18982
+                      storeCode: 5100
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                required:
+                  - code
+                  - message
+                  - level
+                  - description
+                  - moreInfo
+                type: object
+                properties:
+                  code:
+                    type: string
+                    nullable: false
+                    example: access-not-permitted
+                  message:
+                    type: string
+                    nullable: false
+                    example: 'The user GGA006ES with roles encargado,inventarista does not have sufficient permissions to be able to perform this request'
+                  level:
+                    type: string
+                    nullable: false
+                    example: error
+                  description:
+                    type: string
+                    nullable: false
+                    example: To be able to invoke this method or resource you need to be assigned some role as supervisor
+                  moreInfo:
+                    type: string
+                    nullable: false
+                    example: 'https://dia-com-api-test-developer.apigee.io/access-not-permitted'
+                x-examples:
+                  429-quoted-exceeded:
+                    errors:
+                      - code: quoted-exceeded
+                        message: The number of requests has exceeded the limit
+                        level: error
+                        description: Please check the maximum quota allowed set in the subscribed api product short-codes-product
+                        moreInfo: 'https://dia-com-api-test-developer.apigee.io/quoted-exceeded'
+                  403-access-not-permitted:
+                    errors:
+                      - code: access-not-permitted
+                        message: The app with suscribe to short-codes-product does not have sufficient scope to be able to perform this request
+                        level: error
+                        description: 'Please review the api product scopes, currently configured with the following scopes mystore-short-code-v1.read'
+                        moreInfo: 'https://dia-com-api-test-developer.apigee.io/access-not-permitted'
+                description: Example errores
+              examples:
+                example-invalid-token:
+                  value:
+                    errors:
+                      - code: invalid-token
+                        message: Invalid Access Token
+                        level: error
+                        description: 'Please review detail error: [keymanagement.service.invalid_access_token]'
+                        moreInfo: 'https://dia-com-api-test-developer.apigee.io/errorpedia/not-authorization'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                required:
+                  - code
+                  - message
+                  - level
+                  - description
+                  - moreInfo
+                type: object
+                properties:
+                  code:
+                    type: string
+                    nullable: false
+                    example: access-not-permitted
+                  message:
+                    type: string
+                    nullable: false
+                    example: 'The user GGA006ES with roles encargado,inventarista does not have sufficient permissions to be able to perform this request'
+                  level:
+                    type: string
+                    nullable: false
+                    example: error
+                  description:
+                    type: string
+                    nullable: false
+                    example: To be able to invoke this method or resource you need to be assigned some role as supervisor
+                  moreInfo:
+                    type: string
+                    nullable: false
+                    example: 'https://dia-com-api-test-developer.apigee.io/access-not-permitted'
+                x-examples:
+                  429-quoted-exceeded:
+                    errors:
+                      - code: quoted-exceeded
+                        message: The number of requests has exceeded the limit
+                        level: error
+                        description: Please check the maximum quota allowed set in the subscribed api product short-codes-product
+                        moreInfo: 'https://dia-com-api-test-developer.apigee.io/quoted-exceeded'
+                  403-access-not-permitted:
+                    errors:
+                      - code: access-not-permitted
+                        message: The app with suscribe to short-codes-product does not have sufficient scope to be able to perform this request
+                        level: error
+                        description: 'Please review the api product scopes, currently configured with the following scopes mystore-short-code-v1.read'
+                        moreInfo: 'https://dia-com-api-test-developer.apigee.io/access-not-permitted'
+                description: Example errores
+              examples:
+                example-access-not-permitted:
+                  value:
+                    errors:
+                      - code: access-not-permitted
+                        message: The app with suscribe to public-short-codes-v1-read-only does not have sufficient scope to be able to perform this request
+                        level: error
+                        description: 'Please review the api product scopes, currently configured with the following scopes <<api-product-name>>'
+                        moreInfo: 'https://dia-com-api-test-developer.apigee.io/access-not-permitted'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                required:
+                  - code
+                  - message
+                  - level
+                  - description
+                  - moreInfo
+                type: object
+                properties:
+                  code:
+                    type: string
+                    nullable: false
+                    example: access-not-permitted
+                  message:
+                    type: string
+                    nullable: false
+                    example: 'The user GGA006ES with roles encargado,inventarista does not have sufficient permissions to be able to perform this request'
+                  level:
+                    type: string
+                    nullable: false
+                    example: error
+                  description:
+                    type: string
+                    nullable: false
+                    example: To be able to invoke this method or resource you need to be assigned some role as supervisor
+                  moreInfo:
+                    type: string
+                    nullable: false
+                    example: 'https://dia-com-api-test-developer.apigee.io/access-not-permitted'
+                x-examples:
+                  429-quoted-exceeded:
+                    errors:
+                      - code: quoted-exceeded
+                        message: The number of requests has exceeded the limit
+                        level: error
+                        description: Please check the maximum quota allowed set in the subscribed api product short-codes-product
+                        moreInfo: 'https://dia-com-api-test-developer.apigee.io/quoted-exceeded'
+                  403-access-not-permitted:
+                    errors:
+                      - code: access-not-permitted
+                        message: The app with suscribe to short-codes-product does not have sufficient scope to be able to perform this request
+                        level: error
+                        description: 'Please review the api product scopes, currently configured with the following scopes mystore-short-code-v1.read'
+                        moreInfo: 'https://dia-com-api-test-developer.apigee.io/access-not-permitted'
+                description: Example errores
+              examples:
+                example-quoted-exceeded:
+                  value:
+                    errors:
+                      - code: quoted-exceeded
+                        message: The number of requests has exceeded the limit
+                        level: error
+                        description: Please check the maximum quota allowed set in the subscribed api product public-short-codes-v1-read-only
+                        moreInfo: 'https://dia-com-api-test-developer.apigee.io/quoted-exceeded'
+      security:
+        - client_id: []
+        - bearer: []
+      x-diagroup-granted-roles: CASHIER,STORE_MANAGER,DEPARTMENT_MANAGER,INSPECTOR,STORE_HEAD,FRANCHISEE,MANAGER,EXTERNAL,STOCKTAKING_MANAGER,CASHIER_FRANCHISEE,STORE_MANAGER_FRANCHISEE,DEPARTMENT_MANAGER_FRANCHISEE,STORE_HEAD_FRANCHISEE,PRINCIPAL_CASHIER,DIA_SYSTEMS,THIRD_PARTY
+      operationId: getShortCodes
+      description: Get all short codes
+      parameters: []
+      tags:
+        - short-codes
+  /short-codes/cache/invalidate:
+    post:
+      parameters:
+        - name: ce-source
+          in: header
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Created
+      operationId: invalidateCache
+      description: Invalidate cache
+      x-diagroup-granted-roles: CASHIER,STORE_MANAGER,DEPARTMENT_MANAGER,INSPECTOR,STORE_HEAD,FRANCHISEE,MANAGER,EXTERNAL,STOCKTAKING_MANAGER,CASHIER_FRANCHISEE,STORE_MANAGER_FRANCHISEE,DEPARTMENT_MANAGER_FRANCHISEE,STORE_HEAD_FRANCHISEE,PRINCIPAL_CASHIER,DIA_SYSTEMS,THIRD_PARTY
+      tags:
+        - short-codes
+  '/short-codes/store/{storeCode}':
+    get:
+      parameters:
+        - name: storeCode
+          in: path
+          required: true
+          schema:
+            format: int32
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - itemShortCode
+                  - itemCode
+                type: object
+                properties:
+                  itemShortCode:
+                    format: int32
+                    maximum: 99
+                    minimum: 1
+                    type: integer
+                    nullable: false
+                    example: 10
+                  itemCode:
+                    format: int32
+                    maximum: 999999
+                    minimum: 1
+                    type: integer
+                    nullable: false
+                    example: 18982
+                  storeCode:
+                    format: int32
+                    maximum: 99999
+                    minimum: 1
+                    type: integer
+                    nullable: false
+                    example: 5100
+                x-examples:
+                  one-item:
+                    - itemShortCode: 10
+                      itemCode: 18982
+                      storeCode: 5100
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  required:
+                    - code
+                    - message
+                    - level
+                    - description
+                    - moreInfo
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                      nullable: false
+                      example: access-not-permitted
+                    message:
+                      type: string
+                      nullable: false
+                      example: 'The user GGA006ES with roles encargado,inventarista does not have sufficient permissions to be able to perform this request'
+                    level:
+                      type: string
+                      nullable: false
+                      example: error
+                    description:
+                      type: string
+                      nullable: false
+                      example: To be able to invoke this method or resource you need to be assigned some role as supervisor
+                    moreInfo:
+                      type: string
+                      nullable: false
+                      example: 'https://dia-com-api-test-developer.apigee.io/access-not-permitted'
+                  x-examples:
+                    429-quoted-exceeded:
+                      errors:
+                        - code: quoted-exceeded
+                          message: The number of requests has exceeded the limit
+                          level: error
+                          description: Please check the maximum quota allowed set in the subscribed api product short-codes-product
+                          moreInfo: 'https://dia-com-api-test-developer.apigee.io/quoted-exceeded'
+                    403-access-not-permitted:
+                      errors:
+                        - code: access-not-permitted
+                          message: The app with suscribe to short-codes-product does not have sufficient scope to be able to perform this request
+                          level: error
+                          description: 'Please review the api product scopes, currently configured with the following scopes mystore-short-code-v1.read'
+                          moreInfo: 'https://dia-com-api-test-developer.apigee.io/access-not-permitted'
+                  description: Example errores
+      tags:
+        - short-codes
+      operationId: getStoreCodesbyStore
+      description: Get Store Codes by Store
+components:
+  schemas:
+    short-code:
+      required:
+        - itemShortCode
+        - itemCode
+      type: object
+      properties:
+        itemShortCode:
+          format: int32
+          maximum: 99
+          minimum: 1
+          type: integer
+          nullable: false
+          example: 10
+        itemCode:
+          format: int32
+          maximum: 999999
+          minimum: 1
+          type: integer
+          nullable: false
+          example: 18982
+        storeCode:
+          format: int32
+          maximum: 99999
+          minimum: 1
+          type: integer
+          nullable: false
+          example: 5100
+      x-examples:
+        one-item:
+          - itemShortCode: 10
+            itemCode: 18982
+            storeCode: 5100
+    default-error:
+      required:
+        - code
+        - message
+        - level
+        - description
+        - moreInfo
+      type: object
+      properties:
+        code:
+          type: string
+          nullable: false
+          example: access-not-permitted
+        message:
+          type: string
+          nullable: false
+          example: 'The user GGA006ES with roles encargado,inventarista does not have sufficient permissions to be able to perform this request'
+        level:
+          type: string
+          nullable: false
+          example: error
+        description:
+          type: string
+          nullable: false
+          example: To be able to invoke this method or resource you need to be assigned some role as supervisor
+        moreInfo:
+          type: string
+          nullable: false
+          example: 'https://dia-com-api-test-developer.apigee.io/access-not-permitted'
+      x-examples:
+        429-quoted-exceeded:
+          errors:
+            - code: quoted-exceeded
+              message: The number of requests has exceeded the limit
+              level: error
+              description: Please check the maximum quota allowed set in the subscribed api product short-codes-product
+              moreInfo: 'https://dia-com-api-test-developer.apigee.io/quoted-exceeded'
+        403-access-not-permitted:
+          errors:
+            - code: access-not-permitted
+              message: The app with suscribe to short-codes-product does not have sufficient scope to be able to perform this request
+              level: error
+              description: 'Please review the api product scopes, currently configured with the following scopes mystore-short-code-v1.read'
+              moreInfo: 'https://dia-com-api-test-developer.apigee.io/access-not-permitted'
+      description: Example errores
+  securitySchemes:
+    client_id:
+      name: client_id
+      type: apiKey
+      in: header
+      description: ''
+    bearer:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: ''
+          refreshUrl: ''
+          scopes: {}

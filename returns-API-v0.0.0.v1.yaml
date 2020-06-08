@@ -1,0 +1,369 @@
+openapi: 3.0.2
+info:
+  title: orders
+  version: 1.0.0
+  description: Everything Operation related to manage returns of MyStore
+  contact:
+    name: 'DíA % Integración'
+    email: es.isit.integracion@diagroup.com
+    url: 'http://www.diacorporate.com'
+servers:
+  - url: 'https://dia-com-api-test-developer.apigee.io'
+    description: test
+tags:
+  - name: return
+    description: Everything Operation related to manage returns of MyStore
+paths:
+  '/returns/stores/{storeCode}/warehouses':
+    get:
+      tags:
+        - return
+      summary: Query for current warehouses for a store
+      operationId: get-returns-store-warehouses
+      description: get warehouses for a store
+      x-diagroup-granted-roles: 'CASHIER,STORE_MANAGER,DEPARTMENT_MANAGER,INSPECTOR,STORE_HEAD,FRANCHISEE,MANAGER,EXTERNAL,STOCKTAKING_MANAGER,CASHIER_FRANCHISEE,STORE_MANAGER_FRANCHISEE,DEPARTMENT_MANAGER_FRANCHISEE,STORE_HEAD_FRANCHISEE,PRINCIPAL_CASHIER,DIA_SYSTEMS,THIRD_PARTY'
+      parameters:
+        - $ref: '#/components/parameters/Path-StoreCode'
+        - $ref: '#/components/parameters/Header-RequestID'
+        - $ref: '#/components/parameters/Header-DiagroupUserId'
+        - $ref: '#/components/parameters/Header-ApplicationId'
+        - $ref: '#/components/parameters/Header-ClientId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WarehouseStore'
+        '204':
+          description: There is no any order info for this store
+        '400':
+          description: Bad Request
+        '401':
+          description: Not authorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+        '408':
+          description: Timeout
+        '500':
+          description: Internal Server Error
+  '/returns/{returnCode}/stores/{storeCode}':
+    get:
+      tags:
+        - return
+      summary: Query with the information of a return for a store
+      operationId: get-return-store-code
+      description: get information of a return for a store
+      x-diagroup-granted-roles: 'CASHIER,STORE_MANAGER,DEPARTMENT_MANAGER,INSPECTOR,STORE_HEAD,FRANCHISEE,MANAGER,EXTERNAL,STOCKTAKING_MANAGER,CASHIER_FRANCHISEE,STORE_MANAGER_FRANCHISEE,DEPARTMENT_MANAGER_FRANCHISEE,STORE_HEAD_FRANCHISEE,PRINCIPAL_CASHIER,DIA_SYSTEMS,THIRD_PARTY'
+      parameters:
+        - $ref: '#/components/parameters/Path-ReturnCode'
+        - $ref: '#/components/parameters/Path-StoreCode'
+        - $ref: '#/components/parameters/Header-RequestID'
+        - $ref: '#/components/parameters/Header-DiagroupUserId'
+        - $ref: '#/components/parameters/Header-ApplicationId'
+        - $ref: '#/components/parameters/Header-ClientId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnCause'
+        '204':
+          description: There is no any order info for this store
+        '400':
+          description: Bad Request
+        '401':
+          description: Not authorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+        '408':
+          description: Timeout
+        '500':
+          description: Internal Server Error
+  '/returns/stores/{storeCode}':
+    get:
+      tags:
+        - return
+      summary: Query with the information of parameterization associated with returns for a store
+      operationId: get-returns-param-store-code
+      description: get parameterized information of returns for a store
+      x-diagroup-granted-roles: 'CASHIER,STORE_MANAGER,DEPARTMENT_MANAGER,INSPECTOR,STORE_HEAD,FRANCHISEE,MANAGER,EXTERNAL,STOCKTAKING_MANAGER,CASHIER_FRANCHISEE,STORE_MANAGER_FRANCHISEE,DEPARTMENT_MANAGER_FRANCHISEE,STORE_HEAD_FRANCHISEE,PRINCIPAL_CASHIER,DIA_SYSTEMS,THIRD_PARTY'
+      parameters:
+        - $ref: '#/components/parameters/Path-StoreCode'
+        - $ref: '#/components/parameters/Header-RequestID'
+        - $ref: '#/components/parameters/Header-DiagroupUserId'
+        - $ref: '#/components/parameters/Header-ApplicationId'
+        - $ref: '#/components/parameters/Header-ClientId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReturnQuantities'
+        '204':
+          description: There is no any order info for this store
+        '400':
+          description: Bad Request
+        '401':
+          description: Not authorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+        '408':
+          description: Timeout
+        '500':
+          description: Internal Server Error
+    post:
+      tags:
+        - return
+      summary: Adds the return information for a store in App GT
+      operationId: adds-return-store
+      description: adds the information of a return for a store
+      x-diagroup-granted-roles: 'CASHIER,STORE_MANAGER,DEPARTMENT_MANAGER,INSPECTOR,STORE_HEAD,FRANCHISEE,MANAGER,EXTERNAL,STOCKTAKING_MANAGER,CASHIER_FRANCHISEE,STORE_MANAGER_FRANCHISEE,DEPARTMENT_MANAGER_FRANCHISEE,STORE_HEAD_FRANCHISEE,PRINCIPAL_CASHIER,DIA_SYSTEMS,THIRD_PARTY'
+      parameters:
+        - $ref: '#/components/parameters/Path-StoreCode'
+        - $ref: '#/components/parameters/Header-RequestID'
+        - $ref: '#/components/parameters/Header-ClientId'
+        - $ref: '#/components/parameters/Header-DiagroupUserId'
+        - $ref: '#/components/parameters/Header-ApplicationId'
+      responses:
+        '201':
+          description: Created
+        '204':
+          description: There is no any order info for this store
+        '401':
+          description: Not authorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+        '408':
+          description: Timeout
+        '500':
+          description: Internal Server Error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Return'
+components:
+  parameters:
+    Path-ReturnCode:
+      in: path
+      name: returnCode
+      description: store code to be ask for
+      schema:
+        $ref: '#/components/schemas/ReturnCode'
+      required: true
+    Path-StoreCode:
+      in: path
+      name: storeCode
+      description: store code to be ask for
+      schema:
+        $ref: '#/components/schemas/StoreCode'
+      required: true
+    Path-ItemCode:
+      in: path
+      name: itemCode
+      description: item code to be ask for
+      schema:
+        $ref: '#/components/schemas/ItemCode'
+      required: true
+    Header-RequestID:
+      in: header
+      name: X-Request-ID
+      description: Request Id of the request
+      schema:
+        $ref: '#/components/schemas/x-diagroup-uuid'
+      required: true
+    Header-DiagroupUserId:
+      in: header
+      name: X-Diagroup-User-ID
+      description: Diagroup User Id
+      schema:
+        $ref: '#/components/schemas/x-diagroup-user'
+      required: true
+    Header-ApplicationId:
+      in: header
+      name: X-Diagroup-Application-ID
+      description: description Id of the source Application
+      schema:
+        $ref: '#/components/schemas/x-diagroup-application'
+      required: true
+    Header-ClientId:
+      in: header
+      name: client_id
+      description: description Id of the source Application
+      schema:
+        $ref: '#/components/schemas/x-diagroup-client_id'
+      required: true
+    Query-PaginationOffset:
+      in: query
+      name: offset
+      description: number of items to skip before starting to collect the result set
+      schema:
+        $ref: '#/components/schemas/offset'
+      required: false
+    Query-PaginationLimit:
+      in: query
+      name: limit
+      description: numbers of items to return
+      schema:
+        $ref: '#/components/schemas/limit'
+      required: false
+  schemas:
+    WarehouseStore:
+      type: object
+      description: Warehouses for a Store
+      properties:
+        warehouseCode:
+          $ref: '#/components/schemas/WarehouseCode'
+        warehouseName:
+          $ref: '#/components/schemas/WarehouseName'
+    ReturnCause:
+      type: object
+      description: Warehouses for a Store
+      properties:
+        returnCauseCode:
+          $ref: '#/components/schemas/ReturnCauseCode'
+        returnCauseDescription:
+          $ref: '#/components/schemas/ReturnCauseDescription'
+        returnDestination:
+          $ref: '#/components/schemas/ReturnCauseDestination'
+        returnType:
+          $ref: '#/components/schemas/ReturnCauseType'
+    ReturnQuantities:
+      type: object
+      description: Warehouses for a Store
+      properties:
+        maxWeigthToReturn:
+          $ref: '#/components/schemas/UnitsQuantity'
+        maxUnitToReturn:
+          $ref: '#/components/schemas/WeigthQuantity'
+    Return:
+      type: object
+      description: Return Information for a Store
+      properties:
+        storeCode:
+          $ref: '#/components/schemas/StoreCode'
+        warehouseCode:
+          $ref: '#/components/schemas/WarehouseCode'
+        returnDate:
+          $ref: '#/components/schemas/ReturnDate'
+        returnCode:
+          $ref: '#/components/schemas/ReturnCode'
+        processedReturnDate:
+          $ref: '#/components/schemas/ProcessedReturnDate'
+        returnType:
+          $ref: '#/components/schemas/ReturnCauseType'
+        returnItems:
+          $ref: '#/components/schemas/ReturnItem'
+    ReturnItem:
+      type: array
+      description: Warehouses for a Store
+      properties:
+        returnItem:
+          $ref: '#/components/schemas/ItemCode'
+        itemTreatmentType:
+          $ref: '#/components/schemas/ItemTreatmentType'
+        unitsQuantity:
+          $ref: '#/components/schemas/UnitsQuantity'
+        weigthQuantity:
+          $ref: '#/components/schemas/WeigthQuantity'
+        returnReasonCode:
+          $ref: '#/components/schemas/ReturnCauseCode'
+    WarehouseCode:
+      type: integer
+      description: warehouse code
+      example: 10
+    WarehouseName:
+      type: string
+      description: name of the warehouse
+      example: Almacén de Azuqueca
+    ReturnCauseCode:
+      type: string
+      description: Return Good Reason Code
+      example: '1234'
+    ReturnCauseDescription:
+      type: string
+      description: Return Good Reason Description
+      example: package damaged
+    ReturnCauseDestination:
+      type: string
+      description: 'Return destination [“espacio blanco”, “R”-Roturas, “G”-GDCOM]'
+    ReturnCauseType:
+      type: string
+      enum:
+        - '1'
+        - '2'
+      description: 'Return type. [“1” - Devolución a almacén, “2” - Devolución Género directo]'
+      example: '1'
+    UnitsQuantity:
+      type: integer
+      description: Number of units to return
+      example: 4
+    WeigthQuantity:
+      type: integer
+      description: weigth to return. Sent in grammes
+      example: 4
+    ReturnDate:
+      type: string
+      format: date-time
+      example: '2017-07-21T17:32:28Z'
+    ProcessedReturnDate:
+      type: string
+      format: date-time
+      example: '2017-07-21T17:32:28Z'
+    StoreCode:
+      type: number
+      format: integer
+      example: 21
+      description: Unique Identifier of the store
+      x-faker: random.number
+    ReturnCode:
+      type: string
+      description: Return Good Code
+      example: '1234'
+    ItemCode:
+      type: number
+      format: integer
+      example: 803
+      description: Unique Identifier of an item
+      x-faker: random.number
+    ItemTreatmentType:
+      type: integer
+      description: 'Item Treatment Type. 0=Unidades, 1=Peso Variable y 2=Artículo de peso en unidades fijas'
+      example: 0
+    x-diagroup-uuid:
+      type: string
+      format: uuid
+      example: 123e4567-e89b-12d3-a456-426614174000
+    x-diagroup-application:
+      type: string
+      example: MyStore
+    x-diagroup-user:
+      type: string
+      example: AAA666ES
+    x-diagroup-client_id:
+      type: string
+      example: AAA666ES
+    offset:
+      type: integer
+      description: The numbers of items to return
+      example: 0
+    limit:
+      type: integer
+      description: The number of items to skip before starting to collect the result set
+      example: 25
+  securitySchemes: {}
